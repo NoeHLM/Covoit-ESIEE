@@ -1,8 +1,10 @@
 <template>
-    <p>aaa</p>
+    <div class="test">
+        <p>aaa</p>
+    </div>
 </template>
 
-<script>
+<script lang="scss">
 export default ({
     name: "RegisterView",
 })

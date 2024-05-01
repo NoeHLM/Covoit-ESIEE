@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RegisterView from '../views/RegisterView.vue'
-import HelloWorld from '../components/HelloWorld.vue'
+
 
 
 const routes = [
@@ -8,7 +8,7 @@ const routes = [
     {
         path: '/',
         name: 'HelloWorld',
-        component: HelloWorld
+        
     },
     {
         path: '/register',
