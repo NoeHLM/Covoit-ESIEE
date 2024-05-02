@@ -5,7 +5,7 @@ import cors from "cors";
 const mongoString = process.env.DATABASE_URL;
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "http://localhost:8080" }));
 const port = 3000
 
 

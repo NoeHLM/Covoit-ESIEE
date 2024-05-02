@@ -16,42 +16,41 @@
 </template>
 
 <script>
-export default ({
-    name: "LoginView",
-    data() {
-        return {
-            formLogin: {
-                userMail: "",
-                userPassword: "",
-            },
-            errorMessage: "",
+import { loginUser } from "@/utils/AuthContext"; 
+
+export default {
+  name: "LoginView",
+  data() {
+    return {
+      formLogin: {
+        userMail: "",
+        userPassword: "",
+      },
+      errorMessage: "",
+    };
+  },
+  methods: {
+    async onSubmitLogin() {
+      try {
+        const { success, error } = await loginUser(
+            this.formLogin
+        );
+
+        if (success) {
+          console.log("Utilisateur connecté !");
+          this.errorMessage = null;
+        } else {
+          this.errorMessage = error.data.message;
+          console.error("Erreur lors de la connexion :", error.statusText);
         }
+      } catch (error) {
+        console.error("Erreur lors de la requête :", error);
+      }
     },
-    methods: {
-        async onSubmitLogin() {
-            try {
-                const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/users/login`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(this.formLogin)
-                });
-                if (response.ok) {
-                    console.log("Utilisateur connecté !");
-                    this.errorMessage = null;
-                } else {
-                    const errorData = await response.json();
-                    this.errorMessage = errorData.message
-                    console.error("Erreur lors de la connexion :", response.statusText);
-                }
-            } catch (error) {
-                console.error("Erreur lors de la requête :", error);
-            }
-        }
-    }
-})
+  },
+};
 </script>
+
 
 <style lang="scss">
 .Login-Page {
