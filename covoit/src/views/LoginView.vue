@@ -2,11 +2,12 @@
     <div class="Login-Page">
         <img src="https://www.hautsdefrance.fr/app/uploads/2022/06/220504_PassPass_DefiCovoiturage_Visuel_Voiture-750x375-1654607924.png" alt="">
         <div class="div-form-login">
-            <form class="form-login">
+            <form class="form-login" @submit.prevent="onSubmitLogin">
                 <h1>Connexion</h1>
                 <div class="input-group">
-                    <input type="email" placeholder="Email">
-                    <input type="password" placeholder="Mot de passe">
+                    <input v-model="formLogin.userMail" type="email" placeholder="Email">
+                    <input v-model="formLogin.userPassword" type="password" placeholder="Mot de passe">
+                    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
                     <button>Se connecter</button>
                 </div>
             </form>
@@ -17,6 +18,38 @@
 <script>
 export default ({
     name: "LoginView",
+    data() {
+        return {
+            formLogin: {
+                userMail: "",
+                userPassword: "",
+            },
+            errorMessage: "",
+        }
+    },
+    methods: {
+        async onSubmitLogin() {
+            try {
+                const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/users/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(this.formLogin)
+                });
+                if (response.ok) {
+                    console.log("Utilisateur connecté !");
+                    this.errorMessage = null;
+                } else {
+                    const errorData = await response.json();
+                    this.errorMessage = errorData.message
+                    console.error("Erreur lors de la connexion :", response.statusText);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la requête :", error);
+            }
+        }
+    }
 })
 </script>
 
@@ -67,6 +100,9 @@ export default ({
                         color: white;
                         opacity: 0.5;
                     }
+                }
+                .error-message {
+                    color: red;
                 }
             }
             

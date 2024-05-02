@@ -3,7 +3,7 @@
         <img src="https://www.hautsdefrance.fr/app/uploads/2022/06/220504_PassPass_DefiCovoiturage_Visuel_Voiture-750x375-1654607924.png"
             alt="">
         <div class="div-form-signup">
-            <form class="form-signup" @submit.prevent="onSubmit">
+            <form class="form-signup" @submit.prevent="onSubmitRegister">
                 <h1>Inscription</h1>
                 <div class="input-group">
                     <input v-model="formSignup.userLastname" type="text" placeholder="Nom">
@@ -37,7 +37,7 @@ export default ({
         }
     },
     methods: {
-        async onSubmit() {
+        async onSubmitRegister() {
             try {
                 const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/users/register`, {
                     method: "POST",
