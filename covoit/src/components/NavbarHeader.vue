@@ -36,6 +36,7 @@ export default {
       color: white;
       text-decoration: none;
       margin-right: 20px;
+      font-size: 1.2rem;
     }
     a:hover {
     color: #f1f1f1;

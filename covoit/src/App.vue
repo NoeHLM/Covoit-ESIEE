@@ -1,14 +1,21 @@
 <template>
-  <NavbarHeader/>
-  <div class="app">
-    <router-view /> 
-    
+  <div id="app">
+    <NavbarHeader />
+    <div class="content">
+      <router-view /> 
+    </div>
   </div>
 </template>
 
-<script setup>
-import NavbarHeader from './components/NavbarHeader.vue';
 
+<script >
+  import NavbarHeader from './components/NavbarHeader.vue';
+  export default {
+    name: 'App',
+    components: {
+      NavbarHeader
+    }
+  }
 </script>
 
 <style>
@@ -21,4 +28,7 @@ body {
   font-family: 'Roboto', sans-serif;
   width: 100%;
 }
+
+
+
 </style>
