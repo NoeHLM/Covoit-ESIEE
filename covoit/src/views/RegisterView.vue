@@ -8,7 +8,7 @@
                 <div class="input-group">
                     <input v-model="formSignup.userLastname" type="text" placeholder="Nom">
                     <input v-model="formSignup.userFirstname" type="text" placeholder="Prénom">
-                    <input v-model="formSignup.userMail" type="email" placeholder="Email">
+                    <input v-model="formSignup.userPhone" type="tel" placeholder="Numéro de téléphone (06 XX XX XX XX)">
                     <input v-model="formSignup.userPassword" type="password" placeholder="Mot de passe">
                     <input v-model="formSignup.userConfirmPassword" type="password" placeholder="Confirmer mot de passe">
                     <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
@@ -28,7 +28,7 @@ export default ({
             formSignup: {
                 userLastname: "",
                 userFirstname: "",
-                userMail: "",
+                userPhone: "",
                 userPassword: "",
                 userConfirmPassword: ""
             },

@@ -9,7 +9,7 @@ const generateRefreshToken = () => {
 
 export const signup = async (req, res) => {
   const {
-    userMail,
+    userPhone,
     userPassword,
     userFirstname,
     userLastname,
@@ -17,38 +17,38 @@ export const signup = async (req, res) => {
   } = req.body;
 
   try {
-    if (userMail === "" || userFirstname === "" || userLastname === "") {
+    if (userPhone === "" || userFirstname === "" || userLastname === "") {
       return res
-      .status(400)
-      .send({ message: "Veuillez remplir tous les champs." });
+        .status(400)
+        .send({ message: "Veuillez remplir tous les champs." });
     }
     if (userPassword !== userConfirmPassword) {
       return res
         .status(400)
         .send({ message: "Les mots de passe ne correspondent pas." });
     }
-    const existingUser = await User.findOne({ email: userMail });
+    const existingUser = await User.findOne({ email: userPhone });
     if (existingUser) {
       return res
         .status(400)
-        .send({ message: "L'adresse e-mail est déjà utilisée." });
+        .send({ message: "Le numéro de téléphone est déjà utilisée." });
     }
     if (userPassword.length < 6) {
       return res
         .status(400)
         .send({ message: "Le mot de passe doit contenir au moins 6 caractères." });
     }
-    if(userMail.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/) == null){
+    if (!userPhone.match(/^(0[1-9]\d{8})$/)) {
       return res
         .status(400)
-        .send({ message: "L'adresse e-mail est invalide." });
-    }      
+        .send({ message: "Le numéro de téléphone est invalide." });
+    }
     const hashedPassword = await bcrypt.hash(userPassword, 10);
 
     const newUser = new User({
       firstname: userFirstname,
       lastname: userLastname,
-      email: userMail,
+      phone: userPhone,
       password: hashedPassword,
       create_at: new Date(),
       refreshToken: generateRefreshToken(),
@@ -68,10 +68,10 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { userMail, userPassword } = req.body;
+  const { userPhone, userPassword } = req.body;
 
   try {
-    const user = await User.findOne({ email: userMail });
+    const user = await User.findOne({ email: userPhone });
 
     if (!user) {
       return res.status(404).send({ message: "L'utilisateur n'existe pas" });

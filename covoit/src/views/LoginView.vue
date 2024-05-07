@@ -5,7 +5,7 @@
             <form class="form-login" @submit.prevent="onSubmitLogin">
                 <h1>Connexion</h1>
                 <div class="input-group">
-                    <input v-model="formLogin.userMail" type="email" placeholder="Email">
+                    <input v-model="formLogin.userPhone" type="tel" placeholder="Numéro de téléphone">
                     <input v-model="formLogin.userPassword" type="password" placeholder="Mot de passe">
                     <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
                     <button>Se connecter</button>
@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       formLogin: {
-        userMail: "",
+        userPhone: "",
         userPassword: "",
       },
       errorMessage: "",
