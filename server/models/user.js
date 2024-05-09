@@ -12,7 +12,7 @@ const userSchema = new Schema({
         required: true,
         trim: true,
     },
-    email: {
+    phone: {
         type: String,
         required: true,
         unique: true,
@@ -24,7 +24,7 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        default: "unverified_user",
+        default: "user",
     },
     createdAt: {
         type: Date,

@@ -10,9 +10,11 @@
                     <input v-model="formSignup.userFirstname" type="text" placeholder="Prénom">
                     <input v-model="formSignup.userPhone" type="tel" placeholder="Numéro de téléphone (06 XX XX XX XX)">
                     <input v-model="formSignup.userPassword" type="password" placeholder="Mot de passe">
-                    <input v-model="formSignup.userConfirmPassword" type="password" placeholder="Confirmer mot de passe">
+                    <input v-model="formSignup.userConfirmPassword" type="password"
+                        placeholder="Confirmer mot de passe">
                     <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
                     <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
+                    <p class="already-account">Vous avez déjà un compte ? <a href="/login">Connectez-vous</a></p>
                     <button>S'inscrire</button>
                 </div>
             </form>
@@ -115,11 +117,21 @@ export default ({
                         opacity: 0.5;
                     }
                 }
+
                 .error-message {
                     color: red;
                 }
+
                 .success-message {
                     color: green;
+                }
+
+                .already-account {
+                    color: white;
+
+                    a {
+                        font-weight: bold;
+                    }
                 }
             }
 

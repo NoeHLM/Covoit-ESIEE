@@ -27,7 +27,7 @@ export const signup = async (req, res) => {
         .status(400)
         .send({ message: "Les mots de passe ne correspondent pas." });
     }
-    const existingUser = await User.findOne({ email: userPhone });
+    const existingUser = await User.findOne({ phone: userPhone });
     if (existingUser) {
       return res
         .status(400)
@@ -71,7 +71,7 @@ export const login = async (req, res) => {
   const { userPhone, userPassword } = req.body;
 
   try {
-    const user = await User.findOne({ email: userPhone });
+    const user = await User.findOne({ phone: userPhone });
 
     if (!user) {
       return res.status(404).send({ message: "L'utilisateur n'existe pas" });
