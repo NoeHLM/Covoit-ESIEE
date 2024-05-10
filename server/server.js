@@ -24,14 +24,8 @@ database.once("open", () => {
     console.log("Database Connected");
 });
 
-// var myLogger = function (req, res, next) {
-//     console.log('LOGGED');
-//     next();
-// }
-
-// app.use(myLogger);
-
 app.use("/users", userRoutes);
+app.use('/admin', adminRoutes);
   
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
