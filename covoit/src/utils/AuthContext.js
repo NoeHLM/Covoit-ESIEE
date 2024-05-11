@@ -1,11 +1,9 @@
+import { ref } from "vue";
 import Cookies from "js-cookie";
 
-const state = {
-    isLoggedIn: false,
-    accessToken: null,
-    refreshToken: null,
-};
-
+const isLoggedIn = ref(false);
+const accessToken = ref(null);
+const refreshToken = ref(null);
 
 const loginUser = async (formLogin) => {
     try {
@@ -19,14 +17,15 @@ const loginUser = async (formLogin) => {
 
         const data = await res.json(); 
 
-        const { accessToken, refreshToken } = data; 
+        const { accessToken: newAccessToken, refreshToken: newRefreshToken } = data; 
 
-        Cookies.set("accessToken", accessToken);
-        Cookies.set("refreshToken", refreshToken);
+        Cookies.set("accessToken", newAccessToken);
+        Cookies.set("refreshToken", newRefreshToken);
 
-        state.accessToken = accessToken;
-        state.refreshToken = refreshToken;
-        state.isLoggedIn = true;
+        accessToken.value = newAccessToken;
+        refreshToken.value = newRefreshToken;
+        isLoggedIn.value = true;
+
         return { success: true };
     } catch (err) {
         console.error(err);
@@ -34,14 +33,41 @@ const loginUser = async (formLogin) => {
     }
 };
 
+const refreshAccessToken = async () => {
+    try {
+        const refreshTokenValue = Cookies.get("refreshToken");
+
+        if (!refreshTokenValue) {
+            logoutUser();
+            return;
+        }
+
+        const res = await fetch(`${process.env.VUE_APP_API_ADDRESS}/users/refresh-token`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ refreshToken: refreshTokenValue })
+        });
+
+        const { accessToken: newAccessToken } = await res.json();
+
+        Cookies.set("accessToken", newAccessToken);
+        accessToken.value = newAccessToken;
+    }
+    catch (err) {
+        console.error(err);
+        logoutUser();
+    }
+};
 
 const logoutUser = () => {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
 
-    state.accessToken = null;
-    state.refreshToken = null;
-    state.isLoggedIn = false;
+    accessToken.value = null;
+    refreshToken.value = null;
+    isLoggedIn.value = false;
 };
 
-export { state, loginUser, logoutUser };
+export { isLoggedIn, accessToken, refreshToken, loginUser, logoutUser, refreshAccessToken };

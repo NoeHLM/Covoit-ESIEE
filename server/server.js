@@ -11,6 +11,7 @@ const port = 3000
 
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminTripRoutes.js";
+import tripRoutes from "./routes/tripRoutes.js";
 
 
 mongoose.connect(mongoString);
@@ -27,6 +28,7 @@ database.once("open", () => {
 
 app.use("/users", userRoutes);
 app.use('/admin', adminRoutes);
+app.use('/trips', tripRoutes);
   
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

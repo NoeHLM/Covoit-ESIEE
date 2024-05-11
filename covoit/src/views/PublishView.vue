@@ -6,7 +6,7 @@
             <form class="form-publish" @submit.prevent="onSubmitPublish">
                 <h1>Publier un trajet</h1>
                 <div class="input-group">
-                    <AutoComplete v-model="formPublish.departure" placeholderText="Départ" />
+                    <AutoComplete v-model="formPublish.departure" placeholderText="Départ" @placeChanged="handlePlaceChanged" />
                     <select v-model="formPublish.arrival" class="select-style">
                         <option disabled value="">Adresse d'arrivée</option>
                         <option v-for="trip in adminTrips" :key="trip._id" :value="trip.departureAdress">{{
@@ -14,7 +14,7 @@
                     </select>
                     <input v-model="formPublish.date" type="date" placeholder="Date">
                     <input v-model="formPublish.time" type="time" placeholder="Heure">
-                    <input v-model="formPublish.seats" type="number" placeholder="Nombre de places">
+                    <input v-model="formPublish.maxPlaces" type="number" placeholder="Nombre de places">
                     <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
                     <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
                     <button>Publier</button>
@@ -26,20 +26,35 @@
 
 <script>
 import AutoComplete from '@/components/AutoComplete.vue';
+import { useUser } from '@/utils/useUser';
+
 export default {
     name: "PublishTrip",
     components: {
         AutoComplete
     },
-    data() {
+    setup() {
+        const { user } = useUser();
+        console.log("User :", user);
+
+        const formPublish = {
+            User_id: "",
+            departure: "",
+            arrival: "",
+            date: "",
+            time: "",
+            maxPlaces: "",
+            
+        };
+
         return {
-            formPublish: {
-                departure: "",
-                arrival: "",
-                date: "",
-                time: "",
-                seats: ""
-            },
+            user,
+            formPublish
+        };
+    },
+    data() {
+
+        return {
             adminTrips: [],
             errorMessage: "",
             successMessage: ""
@@ -49,6 +64,9 @@ export default {
         this.getAdminTrips();
     },
     methods: {
+        handlePlaceChanged(place) {
+            this.formPublish.departure = place.formatted_address;
+        },
         async getAdminTrips() {
             try {
                 const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/admin/get`);
@@ -64,7 +82,9 @@ export default {
         },
         async onSubmitPublish() {
             try {
-                const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/trips/publish`, {
+                this.formPublish.User_id = this.user._id;
+
+                const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/trips/create`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

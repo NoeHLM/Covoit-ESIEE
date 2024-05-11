@@ -16,7 +16,7 @@ export default {
         };
 
         const link =
-            "https://maps.googleapis.com/maps/api/js?key=AIzaSyDpyuWHqZxiuzV2iGNu9AMNIq34YkqAulo&libraries=places";
+            `https://maps.googleapis.com/maps/api/js?key=AIzaSyDpyuWHqZxiuzV2iGNu9AMNIq34YkqAulo&libraries=places`;
 
         onMounted(() => {
             const script = document.createElement('script');

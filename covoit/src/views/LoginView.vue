@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { loginUser } from "@/utils/AuthContext";
+import { loginUser } from '@/utils/AuthContext';
 
 export default {
   name: "LoginView",

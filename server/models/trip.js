@@ -5,6 +5,7 @@ const tripSchema = new Schema({
     driver: {
         type: Schema.Types.ObjectId,
         ref: "User",
+        required: true,
     },
     departureAdress: {
         type: String,
@@ -31,4 +32,4 @@ const tripSchema = new Schema({
         default: Date.now,
     },
 });
-export default model("Trip", tripSchema);
+export default model("trip", tripSchema);
