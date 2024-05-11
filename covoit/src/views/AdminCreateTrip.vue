@@ -11,17 +11,19 @@
             <form class="form-choice" @submit.prevent="onSubmitSingleTrip">
                 <h2>Trajet unique</h2>
                 <div class="input-group">
-                    <input v-model="formSingleTrip.departure" type="text" ref="adressInput" placeholder="Destination">
+                    <AutoComplete v-model="formSingleTrip.departure" placeholderText="Destination"
+                        @placeChanged="handlePlaceChanged" />
                     <input v-model="formSingleTrip.date" type="date" placeholder="Date">
                     <button>Envoyer</button>
                 </div>
             </form>
         </div>
         <div v-if="showDailyTripForm">
-            <form class="form-choice">
+            <form class="form-choice" @submit.prevent="onSubmitDailyTrip">
                 <h2>Trajet quotidien</h2>
                 <div class="input-group">
-                    <input type="text" placeholder="Destination">
+                    <AutoComplete v-model="formDailyTrip.departure" placeholderText="Destination"
+                        @placeChanged="handlePlaceChanged" />
                     <button>Envoyer</button>
                 </div>
             </form>
@@ -30,9 +32,12 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import AutoComplete from '@/components/AutoComplete.vue';
 export default {
     name: 'AdminCreateTrip',
+    components: {
+        AutoComplete
+    },
     data() {
         return {
             showSingleTripForm: false,
@@ -41,43 +46,52 @@ export default {
                 departure: "",
                 date: "",
             },
+            formDailyTrip: {
+                departure: "",
+            }
         };
     },
-    setup() {
-        const adressInput = ref(null);
-        const link = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDpyuWHqZxiuzV2iGNu9AMNIq34YkqAulo&libraries=places"
-
-        onMounted(() => {
-            const script = document.createElement('script');
-            script.src = link;
-            script.async = true;
-
-            script.onload = () => {
-                new window.google.maps.places.Autocomplete(adressInput.value);
-            };
-
-            script.onerror = () => {
-                console.error("Erreur lors du chargement de l'API Google Maps");
-            };
-
-            document.head.appendChild(script);
-        });
-        return {
-            adressInput
-        }
-    },
     methods: {
+        handlePlaceChanged(place) {
+            this.formSingleTrip.departure = place.formatted_address;
+            this.formDailyTrip.departure = place.formatted_address;
+        },
         async onSubmitSingleTrip() {
+            console.log("Contenu de formSingleTrip :", this.formSingleTrip);
+            this.formSingleTrip.type = "single";
             try {
                 const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/admin/create`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(this.formSingleTrip)
+
+                    body: JSON.stringify(this.formSingleTrip),
+
                 });
                 if (response.ok) {
                     console.log("Trajet unique créé avec succès !");
+                } else {
+                    const errorData = await response.json();
+                    console.error("Erreur lors de la création du trajet :", errorData.message);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la requête :", error);
+            }
+        },
+        async onSubmitDailyTrip() {
+            console.log("Contenu de formDailyTrip :", this.formDailyTrip);
+            this.formDailyTrip.type = "daily";
+            try {
+                const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/admin/create`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(this.formDailyTrip)
+                });
+                if (response.ok) {
+                    console.log("Trajet quotidien créé avec succès !");
                 } else {
                     const errorData = await response.json();
                     console.error("Erreur lors de la création du trajet :", errorData.message);

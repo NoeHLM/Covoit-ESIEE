@@ -8,6 +8,11 @@ const adminTripSchema = new Schema({
     },
     date: {
         type: Date,
+        default: null,
+    },
+    type: {
+        type: String,
+        required: true,
     },
 });
 export default model("adminTrip", adminTripSchema);

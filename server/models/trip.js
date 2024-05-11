@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
 const tripSchema = new Schema({
-    user: {
+    driver: {
         type: Schema.Types.ObjectId,
         ref: "User",
     },

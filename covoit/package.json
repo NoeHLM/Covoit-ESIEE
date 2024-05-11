@@ -16,7 +16,8 @@
     "sass-loader": "^14.2.1",
     "vue": "^3.2.13",
     "vue-cookies": "^1.8.4",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "vue3-google-autocomplete": "^0.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

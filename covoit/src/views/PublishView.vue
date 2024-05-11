@@ -6,9 +6,12 @@
             <form class="form-publish" @submit.prevent="onSubmitPublish">
                 <h1>Publier un trajet</h1>
                 <div class="input-group">
-                    <!-- Utilisation du composant d'input autocomplete -->
-                    <AutocompleteInput v-model="formPublish.departure" placeholderText="Départ" />
-                    <input v-model="formPublish.arrival" type="text" placeholder="Arrivée">
+                    <AutoComplete v-model="formPublish.departure" placeholderText="Départ" />
+                    <select v-model="formPublish.arrival" class="select-style">
+                        <option disabled value="">Adresse d'arrivée</option>
+                        <option v-for="trip in adminTrips" :key="trip._id" :value="trip.departureAdress">{{
+                            trip.departureAdress }}</option>
+                    </select>
                     <input v-model="formPublish.date" type="date" placeholder="Date">
                     <input v-model="formPublish.time" type="time" placeholder="Heure">
                     <input v-model="formPublish.seats" type="number" placeholder="Nombre de places">
@@ -20,13 +23,13 @@
         </div>
     </div>
 </template>
- 
+
 <script>
-import AutoComplete from '../components/AutoComplete.vue'
+import AutoComplete from '@/components/AutoComplete.vue';
 export default {
     name: "PublishTrip",
     components: {
-        AutocompleteInput
+        AutoComplete
     },
     data() {
         return {
@@ -37,11 +40,28 @@ export default {
                 time: "",
                 seats: ""
             },
+            adminTrips: [],
             errorMessage: "",
             successMessage: ""
         };
     },
+    mounted() {
+        this.getAdminTrips();
+    },
     methods: {
+        async getAdminTrips() {
+            try {
+                const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/admin/get`);
+                if (response.ok) {
+                    const trips = await response.json();
+                    this.adminTrips = trips;
+                } else {
+                    console.error("Erreur lors de la récupération des trajets :", response.statusText);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la requête :", error);
+            }
+        },
         async onSubmitPublish() {
             try {
                 const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/trips/publish`, {
@@ -114,6 +134,22 @@ export default {
                     border: 1px solid #000;
                     border-radius: 5px;
                     background-color: #333;
+
+                    &::placeholder {
+                        color: white;
+                        opacity: 0.5;
+                    }
+                }
+
+                .select-style {
+                    color: white;
+                    width: 85%;
+                    padding: 10px;
+                    border: 1px solid #000;
+                    border-radius: 5px;
+                    background-color: #333;
+                    
+                    cursor: pointer;
 
                     &::placeholder {
                         color: white;

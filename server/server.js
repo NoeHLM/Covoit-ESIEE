@@ -10,6 +10,7 @@ const port = 3000
 
 
 import userRoutes from "./routes/userRoutes.js";
+import adminRoutes from "./routes/adminTripRoutes.js";
 
 
 mongoose.connect(mongoString);
