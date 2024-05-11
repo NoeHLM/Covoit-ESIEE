@@ -14,7 +14,6 @@ const loginUser = async (formLogin) => {
             },
             body: JSON.stringify(formLogin)
         });
-
         const data = await res.json(); 
 
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } = data; 
@@ -64,6 +63,7 @@ const refreshAccessToken = async () => {
 const logoutUser = () => {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
+    Cookies.remove("isLoggedIn");
 
     accessToken.value = null;
     refreshToken.value = null;

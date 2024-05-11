@@ -1,18 +1,37 @@
 <template>
   <header class="navbar">
-    <h1>COVOITURAGE</h1>
+    <h1>CovoitEz</h1>
     <div class="navbar--a">
-      <a href="/register">Inscription</a>
-      <a href="/login">Connexion</a>
+      <router-link v-if="isLoggedIn" to="/">Rechercher</router-link>
+      <router-link v-if="isLoggedIn" to="/publish">Publier</router-link>
     </div>
   </header>
 </template>
 
 <script>
+import { ref, watch } from 'vue';
+import { useUser } from '@/utils/useUser';
+import Cookies from 'js-cookie';
+
 export default {
   name: 'NavbarHeader',
+  setup() {
+    const { user } = useUser();
+    console.log('user', user);
+    const isLoggedIn = ref(!!Cookies.get('isLoggedIn'));
+
+    watch(() => Cookies.get('isLoggedIn'), (newValue) => {
+      isLoggedIn.value = !!newValue;
+    });
+
+    return {
+      user,
+      isLoggedIn,
+    };
+  }
 }
 </script>
+
 
 <style lang="scss">
 .navbar {

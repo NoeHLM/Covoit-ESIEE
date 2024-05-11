@@ -20,6 +20,7 @@
 
 <script>
 import { loginUser } from '@/utils/AuthContext';
+import Cookies from 'js-cookie';
 
 export default {
   name: "LoginView",
@@ -42,6 +43,8 @@ export default {
         if (success) {
           console.log("Utilisateur connecté !");
           this.errorMessage = null;
+          Cookies.set('isLoggedIn', true);
+          window.location.reload();
         } else {
           this.errorMessage = error.data.message;
           console.error("Erreur lors de la connexion :", error.statusText);

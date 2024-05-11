@@ -35,7 +35,6 @@ export default {
     },
     setup() {
         const { user } = useUser();
-        console.log("User :", user);
 
         const formPublish = {
             User_id: "",
