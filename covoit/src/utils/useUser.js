@@ -65,9 +65,7 @@ export const useUser = () => {
   const logoutUser = () => {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
-
-    accessToken.value = null;
-    refreshToken.value = null;
+    Cookies.remove("isLoggedIn");
   };
 
   onMounted(async () => {

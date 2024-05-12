@@ -1,3 +1,4 @@
+import e from "express";
 import trip from "../models/trip.js";
 
 export const createTrip = async (req, res) => {
@@ -95,6 +96,18 @@ export const deleteTrip = async (req, res) => {
         return res
             .status(200)
             .send({ message: "Trip deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+export const getNextTrips = async (req, res) => {
+    try {
+        const actualDate = new Date();
+        const trips = await trip.find({ date: { $gte: actualDate } });
+        
+        return res.status(200).send(trips);
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");

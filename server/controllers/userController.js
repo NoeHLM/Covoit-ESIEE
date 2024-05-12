@@ -162,3 +162,17 @@ export const getUserLoggedData = async (req, res) => {
     }
   }
 };
+
+export const getUserName = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    return res.status(200).send({ firstname: user.firstname});
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+

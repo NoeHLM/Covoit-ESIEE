@@ -64,10 +64,6 @@ const logoutUser = () => {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
     Cookies.remove("isLoggedIn");
-
-    accessToken.value = null;
-    refreshToken.value = null;
-    isLoggedIn.value = false;
 };
 
 export { isLoggedIn, accessToken, refreshToken, loginUser, logoutUser, refreshAccessToken };
