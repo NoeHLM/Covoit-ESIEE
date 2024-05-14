@@ -15,6 +15,6 @@ router.post('/register', signup);
 router.post('/login', login);
 router.post("/refresh-token", refreshToken);
 router.post("/me", getUserLoggedData);
-router.post("/getUserName/:id", getUserName);
+router.get("/getUserName/:driverId", getUserName);
 
 export default router;

@@ -3,6 +3,7 @@
     <h1>CovoitEz</h1>
     <div class="navbar--a">
       <router-link v-if="isLoggedIn" to="/research">Rechercher</router-link>
+      <router-link v-if="isLoggedIn" to="/my-trips">Vos trajets</router-link>
       <router-link v-if="isLoggedIn" to="/publish">Publier</router-link>
       <router-link v-if="isLoggedIn && getRole() === 'admin'" to="/admin/create">Admin</router-link>
       <router-link v-if="isLoggedIn" to="/logout" >Deconnexion</router-link>

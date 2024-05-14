@@ -164,15 +164,18 @@ export const getUserLoggedData = async (req, res) => {
 };
 
 export const getUserName = async (req, res) => {
-  const { userId } = req.params;
+  const { driverId } = req.params;
 
   try {
-    const user = await User.findById(userId);
-    return res.status(200).send({ firstname: user.firstname});
-  }
-  catch (error) {
+    const user = await User.findById(driverId);
+    if (!user) {
+      return res.status(404).send({ message: "Utilisateur non trouvé" });
+    }
+    // Si l'utilisateur est trouvé, renvoyer le prénom
+    return res.status(200).send({ firstname: user.firstname });
+  } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send("Erreur interne du serveur");
   }
-}
+};
 

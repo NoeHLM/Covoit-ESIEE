@@ -31,5 +31,11 @@ const tripSchema = new Schema({
         type: Date,
         default: Date.now,
     },
+    participants: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
 });
 export default model("trip", tripSchema);

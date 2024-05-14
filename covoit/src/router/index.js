@@ -3,6 +3,7 @@ import RegisterView from '../views/RegisterView.vue'
 import LoginView from '../views/LoginView.vue'
 import PublishView from '../views/PublishView.vue'
 import ResearchView from '../views/ResearchView.vue'
+import MyTripsView from '../views/MyTripsView.vue'
 import AdminCreateTrip from '../views/AdminCreateTrip.vue'
 import LogoutView from '../views/LogoutView.vue'
 import Cookies from 'js-cookie'
@@ -29,6 +30,12 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
+        path: '/my-trips',
+        name: 'MyTrips',
+        component: MyTripsView,
+        meta: { requiresAuth: true }
+    },
+    {
         path: '/publish',
         name: 'Publish',
         component: PublishView,
@@ -47,6 +54,7 @@ const routes = [
         meta: { requiresAuth: true }
     }
 
+
     
 ]
 
@@ -60,7 +68,7 @@ router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth && !isLoggedIn) {
         next('/login');
     } else if (isLoggedIn && (to.path === '/login' || to.path === '/register')) {
-        next('/publish');
+        next('/research');
     } else {
         next();
     }

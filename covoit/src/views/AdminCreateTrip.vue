@@ -57,7 +57,6 @@ export default {
             this.formDailyTrip.departure = place.formatted_address;
         },
         async onSubmitSingleTrip() {
-            console.log("Contenu de formSingleTrip :", this.formSingleTrip);
             this.formSingleTrip.type = "single";
             try {
                 const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/admin/create`, {
@@ -80,7 +79,6 @@ export default {
             }
         },
         async onSubmitDailyTrip() {
-            console.log("Contenu de formDailyTrip :", this.formDailyTrip);
             this.formDailyTrip.type = "daily";
             try {
                 const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/admin/create`, {

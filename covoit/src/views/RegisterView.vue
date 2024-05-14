@@ -51,7 +51,7 @@ export default ({
                 if (response.ok) {
                     console.log("Utilisateur inscrit avec succès !");
                     this.errorMessage = null;
-                    this.successMessage = "Inscription réussie ! Nous vous avons envoyer un email de confirmation.";
+                    this.successMessage = "Inscription réussie !";
                 } else {
                     const errorData = await response.json();
                     this.errorMessage = errorData.message

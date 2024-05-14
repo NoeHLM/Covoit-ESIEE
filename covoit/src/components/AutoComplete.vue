@@ -28,7 +28,6 @@ export default {
 
                 autocomplete.addListener("place_changed", () => {
                     const place = autocomplete.getPlace();
-                    console.log("Place changed :", place);
                     emit("placeChanged", place);
                 });
             };
