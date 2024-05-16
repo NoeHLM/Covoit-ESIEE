@@ -162,7 +162,7 @@ export default {
 
                 .select-style {
                     color: white;
-                    width: 85%;
+                    width: 88%;
                     padding: 10px;
                     border: 1px solid #000;
                     border-radius: 5px;

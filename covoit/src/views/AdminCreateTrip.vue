@@ -28,8 +28,18 @@
                 </div>
             </form>
         </div>
+
+        <div class="Trips-List">
+            <h2>Liste des trajets</h2>
+            <div class="trip-card" v-for="trip in trips" :key="trip._id">
+                <p>Départ : {{ trip.departureAdress }}</p>
+                <p>Date : {{ trip.date }}</p>
+                <button @click="deleteTrip(trip._id)">Supprimer</button>
+            </div>
+        </div>
     </div>
 </template>
+
 
 <script>
 import AutoComplete from '@/components/AutoComplete.vue';
@@ -48,8 +58,12 @@ export default {
             },
             formDailyTrip: {
                 departure: "",
-            }
+            },
+            trips: []  // Liste des trajets
         };
+    },
+    mounted() {
+        this.getTrips();
     },
     methods: {
         handlePlaceChanged(place) {
@@ -64,12 +78,11 @@ export default {
                     headers: {
                         "Content-Type": "application/json"
                     },
-
                     body: JSON.stringify(this.formSingleTrip),
-
                 });
                 if (response.ok) {
                     console.log("Trajet unique créé avec succès !");
+                    this.getTrips(); // Actualiser la liste des trajets
                 } else {
                     const errorData = await response.json();
                     console.error("Erreur lors de la création du trajet :", errorData.message);
@@ -90,6 +103,7 @@ export default {
                 });
                 if (response.ok) {
                     console.log("Trajet quotidien créé avec succès !");
+                    this.getTrips(); // Actualiser la liste des trajets
                 } else {
                     const errorData = await response.json();
                     console.error("Erreur lors de la création du trajet :", errorData.message);
@@ -97,10 +111,44 @@ export default {
             } catch (error) {
                 console.error("Erreur lors de la requête :", error);
             }
+        },
+        async getTrips() {
+            try {
+                const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/admin/get`);
+                const data = await response.json();
+                console.log("Trajets récupérés :", data);
+                this.trips = data.map(trip => ({
+                    ...trip,
+                    date: this.formatDate(trip.date)
+                }));
+            } catch (error) {
+                console.error("Erreur lors de la récupération des trajets :", error);
+            }
+        },
+        formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', options);
+        },
+        async deleteTrip(tripId) {
+            try {
+                const response = await fetch(`${process.env.VUE_APP_API_ADDRESS}/admin/delete/${tripId}`, {
+                    method: "DELETE",
+                });
+                if (response.ok) {
+                    console.log("Trajet supprimé avec succès !");
+                    this.getTrips(); // Actualiser la liste des trajets
+                } else {
+                    const errorData = await response.json();
+                    console.error("Erreur lors de la suppression du trajet :", errorData.message);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la requête :", error);
+            }
         }
     }
-
 };
+
 </script>
 
 <style>
@@ -186,6 +234,46 @@ export default {
         }
     }
 
+    .Trips-List {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        width: 100%;
 
+        h2 {
+            color: white;
+        }
+
+        .trip-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            width: 40%;
+            color: white;
+
+            p {
+                margin: 0;
+            }
+
+            button {
+                margin-top: 10px;
+                padding: 10px;
+                background-color: #252020;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #333;
+                }
+            }
+        }
+    }
 }
 </style>

@@ -5,7 +5,8 @@ import {
     login,
     refreshToken,
     getUserLoggedData,
-    getUserName
+    getUserName,
+    getUserNameAndPhone,
 } from "../controllers/userController.js";
 
 
@@ -16,5 +17,5 @@ router.post('/login', login);
 router.post("/refresh-token", refreshToken);
 router.post("/me", getUserLoggedData);
 router.get("/getUserName/:driverId", getUserName);
-
+router.get("/getUserNameAndPhone/:passengerId", getUserNameAndPhone);
 export default router;

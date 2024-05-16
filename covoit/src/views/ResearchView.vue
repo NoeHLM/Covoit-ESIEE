@@ -1,17 +1,25 @@
 <template>
     <div class="Research-Page">
         <img src="https://www.hautsdefrance.fr/app/uploads/2022/06/220504_PassPass_DefiCovoiturage_Visuel_Voiture-750x375-1654607924.png" alt="">
-        <p class="advice">En rejoignant un trajet, vous acceptez de partagez votre numéro de téléphone avec les autres participants</p>
+        <p class="advice">En rejoignant un trajet, vous acceptez de partager votre numéro de téléphone avec les autres participants</p>
+        <div class="controls">
+            <input type="text" v-model="searchQuery" placeholder="Rechercher un trajet..." @input="filterTrips">
+            <select v-model="sortOption" @change="sortTrips">
+                <option value="date">Trier par date</option>
+                <option value="departure">Trier par départ</option>
+                <option value="arrival">Trier par arrivée</option>
+            </select>
+        </div>
         <div class="Research-Group">
             <form class="formResearch" @submit.prevent>
-                <div class="ResearchCard" v-for="trip in trips" :key="trip._id">
+                <div class="ResearchCard" v-for="trip in filteredTrips" :key="trip._id">
                     <p>Départ : {{ trip.departureAdress }}</p>
                     <p>Arrivée : {{ trip.destinationAdress }}</p>
                     <div class="TimeHour">
                         <p>Date : {{ trip.date }}</p>
                         <p>{{ trip.time }}</p>
                     </div>
-                    <p>{{ trip.maxPlaces }} places restantes</p>
+                    <p>{{ trip.maxPlaces - trip.participants.length }} places restantes</p>
                     <p>Conducteur : {{ trip.driverName }}</p>
                     <button @click.prevent="onSubmitResearch(trip._id)">Rejoindre</button>
                 </div>
@@ -19,6 +27,7 @@
         </div>
     </div>
 </template>
+
 
 <script>
 import { useUser } from '@/utils/useUser';
@@ -28,6 +37,9 @@ export default {
     data() {
         return {
             trips: [],
+            filteredTrips: [],
+            searchQuery: '',
+            sortOption: 'date',
             successMessage: '',
             errorMessage: ''
         };
@@ -57,6 +69,8 @@ export default {
                 }));
 
                 this.trips = tripsWithDriverNames;
+                this.filteredTrips = tripsWithDriverNames;
+                this.sortTrips();
             } catch (error) {
                 console.error(error);
             }
@@ -69,6 +83,24 @@ export default {
             } catch (error) {
                 console.error(error);
                 return "Nom inconnu";
+            }
+        },
+        filterTrips() {
+            this.filteredTrips = this.trips.filter(trip => {
+                const searchLower = this.searchQuery.toLowerCase();
+                return trip.departureAdress.toLowerCase().includes(searchLower) ||
+                       trip.destinationAdress.toLowerCase().includes(searchLower) ||
+                       trip.driverName.toLowerCase().includes(searchLower);
+            });
+            this.sortTrips();
+        },
+        sortTrips() {
+            if (this.sortOption === 'date') {
+                this.filteredTrips.sort((a, b) => new Date(a.date) - new Date(b.date));
+            } else if (this.sortOption === 'departure') {
+                this.filteredTrips.sort((a, b) => a.departureAdress.localeCompare(b.departureAdress));
+            } else if (this.sortOption === 'arrival') {
+                this.filteredTrips.sort((a, b) => a.destinationAdress.localeCompare(b.destinationAdress));
             }
         },
         async onSubmitResearch(tripId) {
@@ -102,7 +134,6 @@ export default {
 
 <style lang="scss">
 .Research-Page {
-
     img {
         width: 100%;
         height: 100%;
@@ -113,20 +144,41 @@ export default {
     }
     .advice {
         color: white;
-        font-size: 1rem;
+        font-size: 1.3rem;
         margin: 0;
         padding-top: 100px;
         text-shadow: 0 0 10px black;
         text-align: center;
     }
+    .controls {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+
+        input, select {
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: none;
+        }
+    }
     .Research-Group {
         display: flex;
-        flex-direction: column;
-        width: 45%;
+        flex-flow: row wrap;
+        width: 100%;
         height: 100vh;
+
+        .formResearch {
+            display: flex;
+            flex-flow: row wrap;
+            width: 100%;
+            height: 30%;
+            justify-content: space-around;
+        }
         .ResearchCard {
-            background-color: #00000070;
-            width: 80%;
+            background-color: #00000080;
+            width: 40%;
             display: flex;
             flex-flow: column nowrap;
             gap: 10px;
@@ -142,6 +194,19 @@ export default {
                 display: flex;
                 flex-direction: row;
                 gap: 10px;
+            }
+            button {
+                width: 40%;
+                padding: 10px;
+                background-color: #252020;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #333;
+                }
             }
         }
     }

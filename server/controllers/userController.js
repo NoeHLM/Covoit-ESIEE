@@ -171,11 +171,28 @@ export const getUserName = async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: "Utilisateur non trouvé" });
     }
-    // Si l'utilisateur est trouvé, renvoyer le prénom
-    return res.status(200).send({ firstname: user.firstname });
+    return res.status(200).send({ firstname: user.firstname, phone: user.phone});
   } catch (error) {
     console.error(error);
     res.status(500).send("Erreur interne du serveur");
   }
 };
+
+export const getUserNameAndPhone = async (req, res) => {
+  const { passengerId } = req.params;
+
+  try {
+    const user = await User.findById(passengerId);
+    if (!user) {
+      return res.status(404).send({ message: "Utilisateur non trouvé" });
+    }
+    return res.status(200).send({
+      firstname: user.firstname,
+      phone: user.phone,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erreur interne du serveur");
+  }
+}
 

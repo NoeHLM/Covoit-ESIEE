@@ -67,7 +67,7 @@ router.beforeEach((to, from, next) => {
     const isLoggedIn = Cookies.get('isLoggedIn');
     if (to.meta.requiresAuth && !isLoggedIn) {
         next('/login');
-    } else if (isLoggedIn && (to.path === '/login' || to.path === '/register')) {
+    } else if (isLoggedIn && (to.path === '/login' || to.path === '/register' || to.path === '/')) {
         next('/research');
     } else {
         next();

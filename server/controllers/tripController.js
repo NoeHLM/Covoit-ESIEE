@@ -168,8 +168,13 @@ export const ParticipateTrip = async (req, res) => {
 export const CancelParticipation = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.body;
-
     try {
+        console.log(trip.driver, userId)
+        if (userId === trip.driver) {
+            return res.status(400).send({ message: "Vous ne pouvez pas vous désinscrire de votre trajet" });
+        }
+        
+
         await trip.findByIdAndUpdate(id, {
             $pull: { participants: userId },
         });
@@ -186,7 +191,12 @@ export const CancelParticipation = async (req, res) => {
 export const getTripsByUser = async (req, res) => {
     const { userId } = req.params;
     try {
-        const trips = await trip.find({ participants: userId});
+        const trips = await trip.find({ 
+            $or: [
+                { participants: userId },
+                { driver: userId }
+            ]
+        });
         return res.status(200).send(trips);
     } catch (error) {
         console.error(error);
